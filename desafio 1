@@ -1,0 +1,91 @@
+class Animal {
+    private String nome;
+    private int idade;
+    private String tipo;
+
+    public Animal(String nome, int idade, String tipo) {
+        this.nome = nome;
+        this.idade = idade;
+        this.tipo = tipo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void fazerSom() {
+        System.out.println("Som indefinido");
+    }
+
+    public void imprimirInformacoes() {
+        System.out.println("Nome: " + nome);
+        System.out.println("Idade: " + idade);
+        System.out.println("Tipo: " + tipo);
+        System.out.print("Som: ");
+        fazerSom();
+        System.out.println();
+    }
+}
+
+class Cachorro extends Animal {
+    public Cachorro(String nome, int idade) {
+        super(nome, idade, "Cachorro");
+    }
+
+    @Override
+    public void fazerSom() {
+        System.out.println("Au au!");
+    }
+}
+
+class Gato extends Animal {
+    public Gato(String nome, int idade) {
+        super(nome, idade, "Gato");
+    }
+
+    @Override
+    public void fazerSom() {
+        System.out.println("Miau!");
+    }
+}
+
+class Passaro extends Animal {
+    public Passaro(String nome, int idade) {
+        super(nome, idade, "Pássaro");
+    }
+
+    @Override
+    public void fazerSom() {
+        System.out.println("Piu piu!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal cachorro = new Cachorro("Rex", 5);
+        Animal gato = new Gato("Mia", 3);
+        Animal passaro = new Passaro("Piu", 1);
+
+        cachorro.imprimirInformacoes();
+        gato.imprimirInformacoes();
+        passaro.im
