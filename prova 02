@@ -1,0 +1,174 @@
+import java.time.LocalDateTime;
+
+// Classe principal que simula um sistema de estacionamento
+public class SistemaEstacionamento {
+
+    public static void main(String[] args) {
+        // Instancia um veículo do tipo carro
+        Veiculo carro = new Carro("ABC-1234", Veiculo.TIPO_CARRO);
+        // Define a hora de entrada do veículo como a hora atual
+        carro.setHoraEntrada(LocalDateTime.now());
+        // Define que o carro requer lavagem
+        carro.setLavagem(true);
+
+        // Calcula o valor a pagar com base na hora atual de saída
+        double valor = carro.calcularValor(LocalDateTime.now());
+        // Exibe o valor a pagar
+        System.out.println("Valor a pagar: " + valor);
+    }
+}
+
+// Classe abstrata que representa um veículo
+abstract class Veiculo {
+
+    // Constantes para os tipos de veículos
+    public static final int TIPO_CARRO = 1;
+    public static final int TIPO_MOTO = 2;
+
+    // Atributos comuns a todos os veículos
+    private String placa;
+    private int tipo;
+    private LocalDateTime horaEntrada;
+
+    // Construtor para inicializar a placa e o tipo do veículo
+    public Veiculo(String placa, int tipo) {
+        this.placa = placa;
+        this.tipo = tipo;
+    }
+
+    // Método abstrato para calcular o valor a pagar com base na hora de saída
+    public abstract double calcularValor(LocalDateTime horaSaida);
+
+    // Métodos de acesso para os atributos do veículo
+    public String getPlaca() {
+        return placa;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public LocalDateTime getHoraEntrada() {
+        return horaEntrada;
+    }
+
+    public void setHoraEntrada(LocalDateTime horaEntrada) {
+        this.horaEntrada = horaEntrada;
+    }
+}
+
+// Classe que representa um carro, estendendo a classe Veiculo e implementando a interface Lavavel
+class Carro extends Veiculo implements Lavavel {
+
+    // Atributo para indicar se o carro requer lavagem
+    private boolean lavagem;
+
+    // Construtor que chama o construtor da superclasse
+    public Carro(String placa, int tipo) {
+        super(placa, tipo);
+    }
+
+    // Método para calcular o valor a pagar pelo estacionamento do carro
+    @Override
+    public double calcularValor(LocalDateTime horaSaida) {
+        // Calcula o tempo de permanência do carro
+        double tempo = calcularTempo(horaSaida);
+        // Define o valor da hora de estacionamento com base no tipo do veículo
+        double valorHora = getTipo() == TIPO_CARRO ? 5.0 : 2.0;
+        // Calcula o valor base do estacionamento
+        double valorBase = valorHora * tempo;
+
+        // Se o carro requer lavagem, adiciona o custo da lavagem ao valor base
+        if (lavagem) {
+            valorBase += 50.0;
+        }
+
+        return valorBase;
+    }
+
+    // Método para obter se o carro requer lavagem
+    @Override
+    public boolean getLavagem() {
+        return lavagem;
+    }
+
+    // Método para definir se o carro requer lavagem
+    public void setLavagem(boolean lavagem) {
+        this.lavagem = lavagem;
+    }
+
+    // Método privado para calcular o tempo de permanência do carro
+    private double calcularTempo(LocalDateTime horaSaida) {
+        // Calcula a diferença de horas e minutos entre a hora de saída e a hora de entrada
+        double horas = Math.abs(horaSaida.getHour() - getHoraEntrada().getHour());
+        double minutos = Math.abs(horaSaida.getMinute() - getHoraEntrada().getMinute());
+
+        // Retorna o tempo total em horas, considerando os minutos
+        return horas + (minutos / 60.0);
+    }
+}
+
+// Classe que representa uma moto, estendendo a classe Veiculo e implementando a interface TrocaOleo
+class Moto extends Veiculo implements TrocaOleo {
+
+    // Atributo para indicar se a moto requer troca de óleo
+    private boolean trocaOleo;
+
+    // Construtor que chama o construtor da superclasse
+    public Moto(String placa, int tipo) {
+        super(placa, tipo);
+    }
+
+    // Método para calcular o valor a pagar pelo estacionamento da moto
+    @Override
+    public double calcularValor(LocalDateTime horaSaida) {
+        // Calcula o tempo de permanência da moto
+        double tempo = calcularTempo(horaSaida);
+        // Define o valor da hora de estacionamento com base no tipo do veículo
+        double valorHora = getTipo() == TIPO_CARRO ? 5.0 : 2.0;
+        // Calcula o valor base do estacionamento
+        double valorBase = valorHora * tempo;
+
+        // Se a moto requer troca de óleo, adiciona o custo da troca ao valor base
+        if (trocaOleo) {
+            valorBase += 30.0;
+        }
+
+        return valorBase;
+    }
+
+    // Método para obter se a moto requer troca de óleo
+    @Override
+    public boolean getTrocaOleo() {
+        return trocaOleo;
+    }
+
+    // Método para definir se a moto requer troca de óleo
+    public void setTrocaOleo(boolean trocaOleo) {
+        this.trocaOleo = trocaOleo;
+    }
+
+    // Método privado para calcular o tempo de permanência da moto
+    private double calcularTempo(LocalDateTime horaSaida) {
+        // Calcula a diferença de horas e minutos entre a hora de saída e a hora de entrada
+        double horas = Math.abs(horaSaida.getHour() - getHoraEntrada().getHour());
+        double minutos = Math.abs(horaSaida.getMinute() - getHoraEntrada().getMinute());
+
+        // Retorna o tempo total em horas, considerando os minutos
+        return horas + (minutos / 60.0);
+    }
+}
+
+// Interface para indicar que um veículo pode ser lavado
+interface Lavavel {
+
+    // Método para verificar se o veículo requer lavagem
+    boolean getLavagem();
+}
+
+// Interface para indicar que uma moto requer troca de óleo
+interface TrocaOleo {
+
+    // Método para verificar se a moto requer troca de óleo
+    boolean getTrocaOleo();
+}
